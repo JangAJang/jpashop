@@ -6,29 +6,34 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.Transactional;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
+@Rollback(value = false)
 class MemberRepositoryTest {
 
     @Autowired
-    MemberRepository memberRepository;
+    private MemberRepository memberRepository;
 
     @Test
-    @Transactional
     public void testMember() throws Exception{
         //given
         Member member = new Member();
         member.setName("name1");
-        Long savedId = memberRepository.save(member);
 
         //when
-        Member findMember = memberRepository.findById(savedId);
+        memberRepository.save(member);
+        Member findMember = memberRepository.findById(member.getId()).orElseThrow();
+
 
         //then
         Assertions.assertThat(findMember.getName()).isEqualTo("name1");
-        Assertions.assertThat(findMember.getId()).isEqualTo(savedId);
+        Assertions.assertThat(findMember.getId()).isEqualTo(member.getId());
+        Assertions.assertThat(findMember).isEqualTo(member);
     }
+
+
 }
