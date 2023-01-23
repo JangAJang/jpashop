@@ -27,11 +27,23 @@ public class OrderItem {
     @Column(name = "ORDER_ITEM_COUNT")
     private int count;
 
+    //생성 메서드
+    public static OrderItem createOrderItem(Item item, int orderPrice, int count){
+        OrderItem orderItem = new OrderItem();
+        orderItem.setItem(item);
+        orderItem.setOrderPrice(orderPrice);
+        orderItem.setCount(count);
+
+        item.decreaseStock(count);
+        return orderItem;
+    }
+
     // 비즈니스 로직
     public void cancel(){
         getItem().increaseStock(count);
     }
 
+    //조회 로직
     public long getTotalPrice(){
         return (long) orderPrice * count;
     }
