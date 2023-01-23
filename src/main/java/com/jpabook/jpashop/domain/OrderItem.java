@@ -26,4 +26,13 @@ public class OrderItem {
 
     @Column(name = "ORDER_ITEM_COUNT")
     private int count;
+
+    // 비즈니스 로직
+    public void cancel(){
+        getItem().increaseStock(count);
+    }
+
+    public long getTotalPrice(){
+        return (long) orderPrice * count;
+    }
 }
