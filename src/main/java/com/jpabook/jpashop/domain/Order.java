@@ -47,4 +47,15 @@ public class Order {
         order.setOrderDate(LocalDateTime.now());
         return order;
     }
+
+    // 비즈니스 로직
+    public void cancelOrder(){
+        if(delivery.getDeliveryStatus() == DeliveryStatus.COMP){
+            throw new DeliveryAlreadyCompleteException("이미 배송 완료된 상품입니다.");
+        }
+        this.setOrderStatus(CANCEL);
+        for (OrderItem orderItem : orderItems) {
+            orderItem.cancel(); // 주문 하나에 주문상품이 여러개 있으므로 이를 다 취소해야한다.
+        }
+    }
 }
