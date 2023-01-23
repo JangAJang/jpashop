@@ -58,4 +58,11 @@ public class Order {
             orderItem.cancel(); // 주문 하나에 주문상품이 여러개 있으므로 이를 다 취소해야한다.
         }
     }
+
+    // 조회로직
+    public long getTotalPrice(){
+        return orderItems.stream()
+                .mapToLong(OrderItem::getTotalPrice)
+                .sum();
+    }
 }
