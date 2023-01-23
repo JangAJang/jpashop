@@ -1,6 +1,7 @@
 package com.jpabook.jpashop.service;
 
 import com.jpabook.jpashop.domain.Member;
+import com.jpabook.jpashop.exception.member.AlreadyRegisteredMemberException;
 import com.jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,7 @@ public class MemberService {
 
     private void validateDuplicatedMember(Member member){
         if(!memberRepository.findByName(member.getName()).isEmpty()){
-            throw new IllegalArgumentException("이미 가입된 회원입니다");
+            throw new AlreadyRegisteredMemberException("이미 가입된 회원입니다");
         }
     }
 
