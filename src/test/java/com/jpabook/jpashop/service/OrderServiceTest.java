@@ -7,7 +7,8 @@ import com.jpabook.jpashop.domain.OrderStatus;
 import com.jpabook.jpashop.domain.item.Book;
 import com.jpabook.jpashop.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
-import org.assertj.core.api.Assertions;
+import static org.assertj.core.api.Assertions.*;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,8 @@ public class OrderServiceTest {
     private OrderRepository orderRepository;
 
     @Test
-    public void 상품주문() throws Exception{
+    @DisplayName("상품 주문시에 성공하면 주문의 상태는 ORDER이다. ")
+    public void 상품주문1() throws Exception{
         //given
         Address address = new Address("test", "test", "test");
         Member member = new Member("name", address);
@@ -44,14 +46,35 @@ public class OrderServiceTest {
         em.persist(book);
 
         int orderCount = 2;
-
         //when
         Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
 
         //then
         Order order = orderRepository.findOne(orderId);
-        Assertions.assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.ORDER);
-        
+        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.ORDER);
+    }
+
+    @Test
+    @DisplayName("상품 주문시에 성공하면 주문상품 수는 정확하게 저장되어야 한다. ")
+    public void 상품주문2() throws Exception{
+        //given
+        Address address = new Address("test", "test", "test");
+        Member member = new Member("name", address);
+        em.persist(member);
+
+        Book book = new Book();
+        book.setName("시골 JPA");
+        book.setPrice(10_000);
+        book.setStockQuantity(10);
+        em.persist(book);
+
+        int orderCount = 2;
+        //when
+        Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
+
+        //then
+        Order order = orderRepository.findOne(orderId);
+        assertThat(order.getOrderItems().size()).isEqualTo(1);
     }
     
     @Test
