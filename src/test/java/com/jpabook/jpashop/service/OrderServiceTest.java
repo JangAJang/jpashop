@@ -99,6 +99,29 @@ public class OrderServiceTest {
         Order order = orderRepository.findOne(orderId);
         assertThat(order.getTotalPrice()).isEqualTo(10_000 * orderCount);
     }
+
+    @Test
+    @DisplayName("주문시에 주문한 만큼 상품의 재고가 줄어들어야 한다 ")
+    public void 상품주문4() throws Exception{
+        //given
+        Address address = new Address("test", "test", "test");
+        Member member = new Member("name", address);
+        em.persist(member);
+
+        Book book = new Book();
+        book.setName("시골 JPA");
+        book.setPrice(10_000);
+        book.setStockQuantity(10);
+        em.persist(book);
+
+        int orderCount = 2;
+        //when
+        Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
+
+        //then
+        Order order = orderRepository.findOne(orderId);
+        assertThat(book.getStockQuantity()).isEqualTo(8);
+    }
     
     @Test
     public void 주문취소() throws Exception{
