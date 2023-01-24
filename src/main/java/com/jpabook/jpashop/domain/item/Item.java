@@ -37,7 +37,7 @@ public abstract class Item {
     }
 
     public void decreaseStock(int quantity){
-        if(quantity < this.stockQuantity)
+        if(quantity > this.stockQuantity)
             throw new NotEnoughStockException("재고를 0보다 작게 줄일 수 없습니다. 현재 수량 : " + this.stockQuantity);
         this.stockQuantity -= quantity;
     }
