@@ -9,6 +9,8 @@ import com.jpabook.jpashop.exception.item.NotEnoughStockException;
 import com.jpabook.jpashop.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.*;
+
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -99,11 +101,19 @@ public class OrderServiceTest {
     @Test
     public void 주문취소() throws Exception{
         //given
-        
+        Member member = createMember();
+        Book book = createBook("시골 JPA", 10_000, 10);
+
+        int orderCount = 2;
+        Long orderId = orderService.order(member.getId(), book.getId(), orderCount);
+
         //when
-        
+        orderService.cancelOrder(orderId);
+        Order order = orderRepository.findOne(orderId);
         //then
-        
+        assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.CANCEL);
+        Assertions.assertEquals(OrderStatus.CANCEL, order.getOrderStatus(), "주문 취소시 상태 변경되어야 한다.");
+        Assertions.assertEquals(10, book.getStockQuantity(), "주문 취소시 상품 개수가 다시 10개여야 한다.");
     }
     
     @Test
