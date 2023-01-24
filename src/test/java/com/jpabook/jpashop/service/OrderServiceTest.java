@@ -35,15 +35,8 @@ public class OrderServiceTest {
     @DisplayName("상품 주문시에 성공하면 주문의 상태는 ORDER이다. ")
     public void 상품주문1() throws Exception{
         //given
-        Address address = new Address("test", "test", "test");
-        Member member = new Member("name", address);
-        em.persist(member);
-
-        Book book = new Book();
-        book.setName("시골 JPA");
-        book.setPrice(10_000);
-        book.setStockQuantity(10);
-        em.persist(book);
+        Member member = createMember();
+        Book book = createBook();
 
         int orderCount = 2;
         //when
@@ -58,15 +51,8 @@ public class OrderServiceTest {
     @DisplayName("상품 주문시에 성공하면 주문상품 수는 정확하게 저장되어야 한다. ")
     public void 상품주문2() throws Exception{
         //given
-        Address address = new Address("test", "test", "test");
-        Member member = new Member("name", address);
-        em.persist(member);
-
-        Book book = new Book();
-        book.setName("시골 JPA");
-        book.setPrice(10_000);
-        book.setStockQuantity(10);
-        em.persist(book);
+        Member member = createMember();
+        Book book = createBook();
 
         int orderCount = 2;
         //when
@@ -81,15 +67,8 @@ public class OrderServiceTest {
     @DisplayName("주문 가격은 가격 * 수량이다 ")
     public void 상품주문3() throws Exception{
         //given
-        Address address = new Address("test", "test", "test");
-        Member member = new Member("name", address);
-        em.persist(member);
-
-        Book book = new Book();
-        book.setName("시골 JPA");
-        book.setPrice(10_000);
-        book.setStockQuantity(10);
-        em.persist(book);
+        Member member = createMember();
+        Book book = createBook();
 
         int orderCount = 2;
         //when
@@ -104,15 +83,8 @@ public class OrderServiceTest {
     @DisplayName("주문시에 주문한 만큼 상품의 재고가 줄어들어야 한다 ")
     public void 상품주문4() throws Exception{
         //given
-        Address address = new Address("test", "test", "test");
-        Member member = new Member("name", address);
-        em.persist(member);
-
-        Book book = new Book();
-        book.setName("시골 JPA");
-        book.setPrice(10_000);
-        book.setStockQuantity(10);
-        em.persist(book);
+        Member member = createMember();
+        Book book = createBook();
 
         int orderCount = 2;
         //when
@@ -141,5 +113,21 @@ public class OrderServiceTest {
         
         //then
         
+    }
+
+    public Member createMember(){
+        Address address = new Address("test", "test", "test");
+        Member member = new Member("name", address);
+        em.persist(member);
+        return member;
+    }
+
+    public Book createBook(){
+        Book book = new Book();
+        book.setName("시골 JPA");
+        book.setPrice(10_000);
+        book.setStockQuantity(10);
+        em.persist(book);
+        return book;
     }
 }
