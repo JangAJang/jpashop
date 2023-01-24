@@ -5,6 +5,7 @@ import com.jpabook.jpashop.domain.Member;
 import com.jpabook.jpashop.domain.Order;
 import com.jpabook.jpashop.domain.OrderStatus;
 import com.jpabook.jpashop.domain.item.Book;
+import com.jpabook.jpashop.exception.item.NotEnoughStockException;
 import com.jpabook.jpashop.repository.OrderRepository;
 import jakarta.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.*;
@@ -36,7 +37,7 @@ public class OrderServiceTest {
     public void 상품주문1() throws Exception{
         //given
         Member member = createMember();
-        Book book = createBook();
+        Book book = createBook("시골 JPA", 10_000, 10);
 
         int orderCount = 2;
         //when
@@ -52,7 +53,7 @@ public class OrderServiceTest {
     public void 상품주문2() throws Exception{
         //given
         Member member = createMember();
-        Book book = createBook();
+        Book book = createBook("시골 JPA", 10_000, 10);
 
         int orderCount = 2;
         //when
@@ -68,7 +69,7 @@ public class OrderServiceTest {
     public void 상품주문3() throws Exception{
         //given
         Member member = createMember();
-        Book book = createBook();
+        Book book = createBook("시골 JPA", 10_000, 10);
 
         int orderCount = 2;
         //when
@@ -84,7 +85,7 @@ public class OrderServiceTest {
     public void 상품주문4() throws Exception{
         //given
         Member member = createMember();
-        Book book = createBook();
+        Book book = createBook("시골 JPA", 10_000, 10);
 
         int orderCount = 2;
         //when
@@ -108,10 +109,13 @@ public class OrderServiceTest {
     @Test
     public void 상품주문_재고초과() throws Exception{
         //given
-        
+        Member member = createMember();
+        Book book = createBook("시골 JPA", 10_000, 10);
         //when
-        
+        int orderCount = 11;
         //then
+        assertThatThrownBy(()->orderService.order(member.getId(), book.getId(), orderCount))
+                .isInstanceOf(NotEnoughStockException.class);
         
     }
 
@@ -122,11 +126,11 @@ public class OrderServiceTest {
         return member;
     }
 
-    public Book createBook(){
+    public Book createBook(String name, int price, int quantity){
         Book book = new Book();
-        book.setName("시골 JPA");
-        book.setPrice(10_000);
-        book.setStockQuantity(10);
+        book.setName(name);
+        book.setPrice(price);
+        book.setStockQuantity(quantity);
         em.persist(book);
         return book;
     }
