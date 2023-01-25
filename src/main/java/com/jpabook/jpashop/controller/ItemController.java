@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -44,5 +45,12 @@ public class ItemController {
         BookForm form = book.getBookForm();
         model.addAttribute("form", form);
         return "items/updateItemForm";
+    }
+
+    @PostMapping("items/{itemId}/edit")
+    public String updateItem(@ModelAttribute("form") BookForm form, @PathVariable Long itemId){
+        Book book = Book.createBook(form);
+        itemService.saveItem(book);
+        return "redirect:/items";
     }
 }
