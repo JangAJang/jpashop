@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -30,6 +32,11 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findOne(Long id){
         return memberRepository.findOneById(id);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Member> findMembers(){
+        return memberRepository.findAll();
     }
 
 }
