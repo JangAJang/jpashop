@@ -21,7 +21,7 @@ public class ItemController {
         return "items/createItemForm";
     }
 
-    @PostMapping
+    @PostMapping("/items/new")
     public String create(BookForm form){
         itemService.saveItem(Book.createBook(form));
         return "redirect:/";
