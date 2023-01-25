@@ -25,4 +25,15 @@ public class Book  extends Item{
         book.setId(form.getId());
         return book;
     }
+
+    public BookForm getBookForm(){
+        BookForm bookForm = new BookForm();
+        bookForm.setId(this.getId());
+        bookForm.setName(this.getName());
+        bookForm.setPrice(this.getPrice());
+        bookForm.setStockQuantity(this.getStockQuantity());
+        bookForm.setAuthor(this.getAuthor());
+        bookForm.setIsbn(this.getIsbn());
+        return bookForm;
+    }
 }
