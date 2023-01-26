@@ -7,10 +7,7 @@ import com.jpabook.jpashop.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -41,5 +38,11 @@ public class OrderController {
     public String orderList(@ModelAttribute("orderSearch")OrderSearch orderSearch, Model model){
         model.addAttribute("orders", orderService.findOrders(orderSearch));
         return "order/orderList";
+    }
+
+    @PostMapping("/orders/{orderId}/cancel")
+    public String cancelOrder(@PathVariable("orderId")Long orderId){
+        orderService.cancelOrder(orderId);
+        return "redirect:/orders";
     }
 }
