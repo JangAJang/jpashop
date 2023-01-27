@@ -42,6 +42,7 @@ public class OrderApiController {
     @GetMapping("/api/v3/orders")
     public ResultDto ordersV3(){
         // 한방으로 모든 경우를 만들다보니, Order_ID가 중복되게 나올 수 있다. 데이터가 뻥튀기된다.
+        // 그래서 distinct를 사용하면, 중복을 제거해준다.
         List<Order> orders = orderRepository.findAllWithItem();
         return new ResultDto(orders.stream()
                 .map(OrderInfoDto::new)
