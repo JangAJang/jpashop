@@ -2,6 +2,7 @@ package com.jpabook.jpashop.api;
 
 import com.jpabook.jpashop.domain.Order;
 import com.jpabook.jpashop.domain.OrderItem;
+import com.jpabook.jpashop.dto.ResultDto;
 import com.jpabook.jpashop.dto.order.OrderInfoDto;
 import com.jpabook.jpashop.dto.order.SimpleOrderDto;
 import com.jpabook.jpashop.repository.OrderRepository;
@@ -33,7 +34,17 @@ public class OrderApiController {
 
     @GetMapping("/api/v2/orders")
     public List<OrderInfoDto>  ordersV2(){
+        // 주문 하나에 있는 orderItem의 리스트 길이만큼 쿼리가 나간다. 리스트 길이들의 총 합 + 1만큼 쿼리가 나간다.
         List<Order> orders = orderRepository.findAllByString(new OrderSearch());
         return orders.stream().map(OrderInfoDto::new).collect(Collectors.toList());
+    }
+
+    @GetMapping("/api/v3/orders")
+    public ResultDto ordersV3(){
+        // 한방으로 모든 경우를 만들다보니, Order_ID가 중복되게 나올 수 있다. 데이터가 뻥튀기된다.
+        List<Order> orders = orderRepository.findAllWithItem();
+        return new ResultDto(orders.stream()
+                .map(OrderInfoDto::new)
+                .collect(Collectors.toList()));
     }
 }
