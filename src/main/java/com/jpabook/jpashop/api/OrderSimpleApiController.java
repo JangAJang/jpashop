@@ -59,4 +59,16 @@ public class OrderSimpleApiController {
                 .map(SimpleOrderDto::new)
                 .collect(Collectors.toList()));
     }
+
+    /*
+     N+1문제를 해결하면서 엔티티로 조회해 다시 dto로 설정하는게 아닌, 레포지토리에서 바로 dto로 만들어 반환하는 방식
+     쿼리문에서 select문에서 모든 속성을 반환하지 않는다.
+
+     v3 : 원하는 엔티티들을 모두 가져온다. 성능 튜닝까지만 해둔 상태
+     v4 : 실제 sql 짜듯이 필요한 데이터만 가져온다. 문제는, 재사용성!!!!(이렇게 빼온 데이터를 어디서 쓸까...?)
+     */
+    @GetMapping("/api/v4/simple-orders")
+    public ResultDto ordersV4(){
+        return new ResultDto(orderRepository.findOrderDtos());
+    }
 }

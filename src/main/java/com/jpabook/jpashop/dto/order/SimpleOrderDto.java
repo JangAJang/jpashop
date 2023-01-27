@@ -23,4 +23,12 @@ public class SimpleOrderDto {
         orderStatus = order.getOrderStatus();
         address = order.getDelivery().getAddress();
     }
+
+    public SimpleOrderDto(Long id, String name, LocalDateTime orderDate, OrderStatus orderStatus, Address address) {
+        this.id = id;
+        this.name = name;
+        this.orderDate = orderDate;
+        this.orderStatus = orderStatus;
+        this.address = address;
+    }
 }
