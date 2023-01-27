@@ -51,4 +51,12 @@ public class OrderSimpleApiController {
         return new ResultDto(orderRepository.findAllByString(new OrderSearch()).stream().map(SimpleOrderDto::new)
                 .collect(Collectors.toList()));
     }
+
+    // N+1 문제를 해결하기 위한 페치 조인 쿼리 구현
+    @GetMapping("/api/v3/simple-orders")
+    public ResultDto ordersV3(){
+        return new ResultDto(orderRepository.findAllWithMemberDelivery().stream()
+                .map(SimpleOrderDto::new)
+                .collect(Collectors.toList()));
+    }
 }
