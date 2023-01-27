@@ -1,5 +1,6 @@
 package com.jpabook.jpashop.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.jpabook.jpashop.dto.member.CreateMemberRequestDto;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
@@ -24,6 +25,7 @@ public class Member {
     @Embedded
     private Address address;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "member")
     private List<Order> myOrders = new ArrayList<>();
 
