@@ -3,12 +3,12 @@ package com.jpabook.jpashop.api;
 import com.jpabook.jpashop.domain.Member;
 import com.jpabook.jpashop.dto.member.CreateMemberRequestDto;
 import com.jpabook.jpashop.dto.member.CreateMemberResponseDto;
+import com.jpabook.jpashop.dto.member.UpdateMemberRequestDto;
+import com.jpabook.jpashop.dto.member.UpdateMemberResponseDto;
 import com.jpabook.jpashop.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -21,5 +21,12 @@ public class MemberApiController {
         Member member = Member.loadMemberByCreateRequest(createMemberRequestDto);
         memberService.join(member);
         return new CreateMemberResponseDto(member.getId());
+    }
+
+    @PutMapping("/api/v2/members/{id}")
+    public UpdateMemberResponseDto updateMember(@RequestParam("id")Long id,
+                                                @RequestBody @Valid UpdateMemberRequestDto updateMemberRequestDto){
+        memberService.update(id, updateMemberRequestDto.getName());
+        return new UpdateMemberResponseDto(id, updateMemberRequestDto.getName());
     }
 }

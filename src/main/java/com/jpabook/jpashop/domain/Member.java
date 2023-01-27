@@ -39,4 +39,8 @@ public class Member {
                         createMemberRequestDto.getZipcode()));
 
     }
+
+    public void updateName(String name){
+        this.name = name;
+    }
 }
