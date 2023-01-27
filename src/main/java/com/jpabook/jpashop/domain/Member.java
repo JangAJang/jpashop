@@ -1,6 +1,7 @@
 package com.jpabook.jpashop.domain;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Getter;
 
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ public class Member {
     private Long id;
 
     @Column(name = "MEMBER_NAME")
+    @NotEmpty
     private String name;
 
     @Embedded
