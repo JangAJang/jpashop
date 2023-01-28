@@ -72,6 +72,6 @@ public class OrderApiController {
 
     @GetMapping("/api/v4/orders")
     public ResultDto ordersV4(){
-        orderQueryRepository.findOrderQueryDto();
+        return new ResultDto(orderQueryRepository.findOrderQueryDto());
     }
 }
