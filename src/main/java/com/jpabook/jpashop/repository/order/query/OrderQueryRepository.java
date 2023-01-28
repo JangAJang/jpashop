@@ -45,22 +45,30 @@ public class OrderQueryRepository {
         ).setParameter("orderId", orderId).getResultList();
     }
 
-    public List<OrderQueryDto> findAllByDto_Optimazation() {
+    public List<OrderQueryDto> findAllByDto_Optimization() {
         List<OrderQueryDto> orders = findOrders();
-        List<Long> orderIds = orders.stream().map(OrderQueryDto::getOrderId).collect(Collectors.toList());
+        return applyOrderItemDtoToOrderDto(orders, getOrderItemQueryDtos(getOrderIds(orders)));
+        //쿼리 한번에 모든 정보를 가져오고, 가져온 정보들을 주문에 따라 매핑시킨다. 매핑 시킨 컬렉션을 각 주문에 set해준다.
+        //쿼리가 두번만 나가게 된다.
+    }
 
-        List<OrderItemQueryDto> orderItemQueryDtos = em.createQuery(
+    private List<Long> getOrderIds(List<OrderQueryDto> orders){
+        return orders.stream().map(OrderQueryDto::getOrderId).collect(Collectors.toList());
+    }
+
+    private List<OrderQueryDto> applyOrderItemDtoToOrderDto(List<OrderQueryDto> orders, List<OrderItemQueryDto> orderItemQueryDtos) {
+        Map<Long, List<OrderItemQueryDto>> orderItemMap = orderItemQueryDtos.stream()
+                .collect(Collectors.groupingBy(OrderItemQueryDto::getOrderId));
+        orders.forEach(o-> o.setOrderItemQueryDtos(orderItemMap.get(o)));
+        return orders;
+    }
+
+    private List<OrderItemQueryDto> getOrderItemQueryDtos(List<Long> orderIds) {
+        return em.createQuery(
                 "select new com.jpabook.jpashop.dto.orderItem.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count) " +
                         "from OrderItem oi " +
                         "join oi.item i " +
                         "where oi.order.id = :orderIds", OrderItemQueryDto.class
         ).setParameter("orderIds", orderIds).getResultList();
-
-        Map<Long, List<OrderItemQueryDto>> orderItemMap = orderItemQueryDtos.stream()
-                .collect(Collectors.groupingBy(orderItemQueryDto -> orderItemQueryDto.getOrderId()));
-        orders.forEach(o-> o.setOrderItemQueryDtos(orderItemMap.get(o)));
-        return orders;
-        //쿼리 한번에 모든 정보를 가져오고, 가져온 정보들을 주문에 따라 매핑시킨다. 매핑 시킨 컬렉션을 각 주문에 set해준다.
-        //쿼리가 두번만 나가게 된다.
     }
 }
