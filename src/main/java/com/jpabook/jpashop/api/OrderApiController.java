@@ -3,6 +3,8 @@ package com.jpabook.jpashop.api;
 import com.jpabook.jpashop.domain.Order;
 import com.jpabook.jpashop.dto.ResultDto;
 import com.jpabook.jpashop.dto.order.OrderInfoDto;
+import com.jpabook.jpashop.dto.order.OrderQueryDto;
+import com.jpabook.jpashop.dto.orderItem.OrderItemQueryDto;
 import com.jpabook.jpashop.repository.order.OrderRepository;
 import com.jpabook.jpashop.repository.order.OrderSearch;
 import com.jpabook.jpashop.repository.order.query.OrderQueryRepository;
@@ -11,9 +13,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.xml.transform.Result;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static java.util.stream.Collectors.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -83,7 +86,13 @@ public class OrderApiController {
 
     @GetMapping("api/v6/orders")
     public ResultDto ordersV6(){
-        return new ResultDto(orderQueryRepository.findAllByDto_FLAT());
+        return new ResultDto(
+                orderQueryRepository.findAllByDto_FLAT().stream()
+                .collect(groupingBy(o-> new OrderQueryDto(o.getOrderId(), o.getName(), o.getOrderDate(), o.getOrderStatus(), o.getAddress()),
+                        mapping(o->new OrderItemQueryDto(o.getOrderId(), o.getItemName(), o.getOrderPrice(), o.getCount()), toList())
+                )).entrySet().stream()
+                .map(e-> new OrderQueryDto(e.getKey().getOrderId(), e.getKey().getName(), e.getKey().getOrderDate(), e.getKey().getOrderStatus(), e.getKey().getAddress(), e.getValue()))
+                .collect(toList())
+        );
     }
-
 }
