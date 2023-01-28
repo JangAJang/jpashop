@@ -1,6 +1,7 @@
 package com.jpabook.jpashop.repository.order.query;
 
 import com.jpabook.jpashop.domain.OrderItem;
+import com.jpabook.jpashop.dto.order.OrderFlatDto;
 import com.jpabook.jpashop.dto.order.OrderQueryDto;
 import com.jpabook.jpashop.dto.orderItem.OrderItemQueryDto;
 import jakarta.persistence.EntityManager;
@@ -65,10 +66,22 @@ public class OrderQueryRepository {
 
     private List<OrderItemQueryDto> getOrderItemQueryDtos(List<Long> orderIds) {
         return em.createQuery(
-                "select new com.jpabook.jpashop.dto.orderItem.OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count) " +
+                "select new com.jpabook.jpashop.dto.orderItem." +
+                        "OrderItemQueryDto(oi.order.id, i.name, oi.orderPrice, oi.count) " +
                         "from OrderItem oi " +
                         "join oi.item i " +
                         "where oi.order.id = :orderIds", OrderItemQueryDto.class
         ).setParameter("orderIds", orderIds).getResultList();
+    }
+
+    public List<OrderFlatDto> findAllByDto_FLAT(){
+        return em.createQuery(
+                "select new com.jpabook.jpashop.dto.order.OrderFlatDto(o.id, m.name, o.orderDate, o.orderStatus, d.address, i.name, oi.orderPrice, oi.count)" +
+                        "from Order o " +
+                        "join o.member m " +
+                        "join o.delivery d " +
+                        "join o.orderItems oi " +
+                        "join oi.item i", OrderFlatDto.class
+        ).getResultList();
     }
 }
