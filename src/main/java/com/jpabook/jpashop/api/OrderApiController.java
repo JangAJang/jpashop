@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.xml.transform.Result;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -73,5 +74,10 @@ public class OrderApiController {
     @GetMapping("/api/v4/orders")
     public ResultDto ordersV4(){
         return new ResultDto(orderQueryRepository.findOrderQueryDto());
+    }
+
+    @GetMapping("/api/v5/orders")
+    public ResultDto ordersV5(){
+        return new ResultDto(orderQueryRepository.findAllByDto_Optimazation());
     }
 }
