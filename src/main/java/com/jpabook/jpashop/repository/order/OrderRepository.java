@@ -1,4 +1,4 @@
-package com.jpabook.jpashop.repository;
+package com.jpabook.jpashop.repository.order;
 
 import com.jpabook.jpashop.domain.Order;
 import com.jpabook.jpashop.dto.order.SimpleOrderDto;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.StringUtils;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Repository

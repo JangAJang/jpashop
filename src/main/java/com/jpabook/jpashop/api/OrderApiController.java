@@ -1,12 +1,11 @@
 package com.jpabook.jpashop.api;
 
 import com.jpabook.jpashop.domain.Order;
-import com.jpabook.jpashop.domain.OrderItem;
 import com.jpabook.jpashop.dto.ResultDto;
 import com.jpabook.jpashop.dto.order.OrderInfoDto;
-import com.jpabook.jpashop.dto.order.SimpleOrderDto;
-import com.jpabook.jpashop.repository.OrderRepository;
-import com.jpabook.jpashop.repository.OrderSearch;
+import com.jpabook.jpashop.repository.order.OrderRepository;
+import com.jpabook.jpashop.repository.order.OrderSearch;
+import com.jpabook.jpashop.repository.order.query.OrderQueryRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,6 +19,8 @@ import java.util.stream.Collectors;
 public class OrderApiController {
 
     private final OrderRepository orderRepository;
+
+    private final OrderQueryRepository orderQueryRepository;
 
     @GetMapping("/api/v1/orders")
     public List<Order> ordersV1(){
@@ -67,5 +68,10 @@ public class OrderApiController {
         List<OrderInfoDto> result = orderRepository.findAllWithMemberDelivery(offset, count)
                 .stream().map(OrderInfoDto::new).collect(Collectors.toList());
         return new ResultDto(result);
+    }
+
+    @GetMapping("/api/v4/orders")
+    public ResultDto ordersV4(){
+        orderQueryRepository.findOrderQueryDto();
     }
 }

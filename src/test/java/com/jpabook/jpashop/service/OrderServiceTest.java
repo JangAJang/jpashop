@@ -6,7 +6,7 @@ import com.jpabook.jpashop.domain.Order;
 import com.jpabook.jpashop.domain.OrderStatus;
 import com.jpabook.jpashop.domain.item.Book;
 import com.jpabook.jpashop.exception.item.NotEnoughStockException;
-import com.jpabook.jpashop.repository.OrderRepository;
+import com.jpabook.jpashop.repository.order.OrderRepository;
 import jakarta.persistence.EntityManager;
 import static org.assertj.core.api.Assertions.*;
 
